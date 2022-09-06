@@ -101,7 +101,7 @@ public class LoginForm extends JFrame {
 
     private void AccederEvent(JTextField txt_User, JPasswordField txt_Pass) {
         User = txt_User.getText().trim();
-        _pass = txt_Pass.getText().trim();
+        _pass = new String(txt_Pass.getPassword());
         if (!LoginFun.Validos(User, _pass)) {
             JOptionPane.showMessageDialog(null, "Debes llenar todos los campos");
             return;

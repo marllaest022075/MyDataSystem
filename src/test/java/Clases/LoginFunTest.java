@@ -4,8 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
 
-import org.junit.Test;
-
 //import java.sql.Connection;
 
 import org.junit.jupiter.params.ParameterizedTest;
