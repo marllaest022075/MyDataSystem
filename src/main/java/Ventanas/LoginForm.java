@@ -14,7 +14,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import javax.xml.crypto.URIDereferencer;
 
 import Clases.LogArgs;
 import Clases.LoginFun;
@@ -87,25 +86,7 @@ public class LoginForm extends JFrame {
         Btn_Acceso.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                User = txt_User.getText().trim();
-                _pass = txt_Pass.getText().trim();
-                if (!LoginFun.Validos(User, _pass)) {
-                    JOptionPane.showMessageDialog(null, "Debes llenar todos los campos");
-                    return;
-                }
-                try {
-                    LogArgs args = LoginFun.LogInEvent(User, _pass);
-                    if (!args.get_estatus().equalsIgnoreCase("Activo"))
-                        return;
-                    switch (args.get_tipo_nivel()) {
-
-                        default:
-                            System.out.println("Exelente");
-                            break;
-                    }
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
+                AccederEvent(txt_User, txt_Pass);
             }
 
         });
@@ -116,6 +97,44 @@ public class LoginForm extends JFrame {
         add(txt_Pass);
         add(Btn_Acceso);
 
+    }
+
+    private void AccederEvent(JTextField txt_User, JPasswordField txt_Pass) {
+        User = txt_User.getText().trim();
+        _pass = txt_Pass.getText().trim();
+        if (!LoginFun.Validos(User, _pass)) {
+            JOptionPane.showMessageDialog(null, "Debes llenar todos los campos");
+            return;
+        }
+        try {
+            LogArgs args = LoginFun.LogInEvent(User, _pass);
+            if (args == null) {
+                JOptionPane.showMessageDialog(null, "Usuario y/o password Incorrecto/s");
+                txt_User.setText("");
+                txt_Pass.setText("");
+                txt_User.requestFocusInWindow();
+                User = "";
+                _pass = "";
+                return;
+            }
+
+            if (!args.get_estatus().equalsIgnoreCase("Activo"))
+                return;
+            switch (args.get_tipo_nivel()) {
+                case "Administrador":
+                    new AdministradorForm();
+                    break;
+                case "Capturista":
+                    new CapturistaForm();
+                    break;
+                case "Tecnico":
+                    new TecnicoForm();
+                    break;
+            }
+            dispose();
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+        }
     }
 
 }
