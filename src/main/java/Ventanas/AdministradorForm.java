@@ -12,16 +12,24 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
+import Clases.AdminFun;
+
 public class AdministradorForm extends JFrame {
     private int _width = 520;
     private int _height = 420;
+    private String _user = "";
+    private String _userName = "";
+    public static int Sesion_Usuario;
 
     public AdministradorForm() {
         super();
+        _user = LoginForm.User;
+        _userName = AdminFun.GetUserName(_user);
         ImageIcon img = new ImageIcon("src/main/java/Images/icon.png");
         setIconImage(img.getImage());
-        setTitle("Administacion");
+        setTitle("Administacion : Secion de " + _user);
         setSize(_width, _height);
+        setResizable(false);
         try {
             setContentPane(
                     new JLabel(new ImageIcon(ImageIO.read(new File("src/main/java/Images/wallpaperPrincipal.jpg")))));
@@ -42,6 +50,7 @@ public class AdministradorForm extends JFrame {
         lbl_UserName.setSize(480, 30);
         lbl_UserName.setForeground(Color.white);
         lbl_UserName.setFont(new Font("Arial", 1, 25));
+        lbl_UserName.setText(_userName);
 
         // Etiqueta de Boton Registrar
         JLabel lbl_Registrar = new JLabel();
