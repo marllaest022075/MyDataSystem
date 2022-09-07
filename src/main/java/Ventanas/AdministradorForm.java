@@ -2,6 +2,8 @@ package Ventanas;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -111,6 +113,12 @@ public class AdministradorForm extends JFrame {
         btn_RegisterUser.setLocation(20, 50);
         btn_RegisterUser.setSize(140, 120);
         btn_RegisterUser.setToolTipText("Registrar Usuario");
+        btn_RegisterUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                OpenRegister();
+            }
+        });
 
         // Boton para ingresar Usuarios
         JButton btn_ManageUser = new JButton("", new ImageIcon("src/main/java/Images/informationuser.png"));
@@ -152,5 +160,9 @@ public class AdministradorForm extends JFrame {
         add(btn_Tecnico);
         add(btn_About);
 
+    }
+
+    private void OpenRegister() {
+        new RegistroUsuarioForm();
     }
 }
