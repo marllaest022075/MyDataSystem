@@ -14,13 +14,14 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 import Clases.LogArgs;
 import Clases.LoginFun;
 
 public class LoginForm extends JFrame {
 
-    public String User = "";
+    public static String User = "";
     private String _pass = "";
     private int _width = 400;
     private int _height = 550;
@@ -31,6 +32,7 @@ public class LoginForm extends JFrame {
         setIconImage(img.getImage());
         setTitle("Login");
         setSize(_width, _height);
+        setResizable(false);
         try {
             setContentPane(
                     new JLabel(new ImageIcon(ImageIO.read(new File("src/main/java/Images/wallpaperPrincipal.jpg")))));
@@ -39,7 +41,7 @@ public class LoginForm extends JFrame {
         }
         setLocationRelativeTo(null);
         setLayout(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Inicializar();
         setVisible(true);
     }
