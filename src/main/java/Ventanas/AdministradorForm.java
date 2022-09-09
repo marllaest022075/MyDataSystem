@@ -163,6 +163,7 @@ public class AdministradorForm extends JFrame {
     }
 
     private void OpenRegister() {
-        new RegistroUsuarioForm();
+        setVisible(false);
+        new RegistroUsuarioForm(this);
     }
 }
