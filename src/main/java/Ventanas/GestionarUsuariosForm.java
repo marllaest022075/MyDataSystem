@@ -2,18 +2,23 @@ package Ventanas;
 
 import java.io.File;
 import java.io.IOException;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 
 public class GestionarUsuariosForm extends JFrame {
     private int _width = 520;
     private int _height = 420;
     private String _user = "";
     private JFrame _main;
+
+    private JLabel lbl_Titulo;
 
     public GestionarUsuariosForm(JFrame main) {
         super();
@@ -51,5 +56,16 @@ public class GestionarUsuariosForm extends JFrame {
     }
 
     private void Inicializar() {
+
+        lbl_Titulo = new JLabel();
+        lbl_Titulo.setSize(500, 30);
+        lbl_Titulo.setLocation(10, 10);
+        lbl_Titulo.setFont(new Font("Arial", 1, 24));
+        lbl_Titulo.setForeground(Color.WHITE);
+        lbl_Titulo.setText("Usuarios Registrados");
+        lbl_Titulo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        add(lbl_Titulo);
+
     }
 }
