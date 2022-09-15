@@ -7,23 +7,27 @@ import java.sql.SQLException;
 
 public class LoginFun {
 
-    public static boolean Validos(String user, String pass) {
-        if (user == null || pass == null || user.trim().equals("") || pass.trim().equals("")) {
-
-            return false;
-        }
-        return true;
-    }
-
-    public static LogArgs LogInEvent(String user, String pass) throws SQLException {
+    public static LogArgs LogInEvent(String user, String pass) {
         Connection cn = Conexion.conectar();
-        PreparedStatement pst = cn.prepareStatement(
-                "select tipo_nivel, estatus from usuarios where username = ? and password = ?");
-        pst.setString(1, user);
-        pst.setString(2, pass);
-        ResultSet rs = pst.executeQuery();
-        if (!rs.next())
-            return null;
-        return new LogArgs(rs.getString("tipo_nivel"), rs.getString("estatus"));
+        LogArgs res = null;
+        PreparedStatement pst;
+        try {
+            pst = cn.prepareStatement(
+                    "select tipo_nivel, estatus from usuarios where username = ? and password = ?");
+            pst.setString(1, user);
+            pst.setString(2, pass);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next())
+                res = new LogArgs(rs.getString("tipo_nivel"), rs.getString("estatus"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                cn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return res;
     }
 }

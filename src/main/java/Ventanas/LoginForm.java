@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
+// import java.sql.SQLDataException;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 
 import Clases.LogArgs;
 import Clases.LoginFun;
+import Clases.Validations;
 
 public class LoginForm extends JFrame {
 
@@ -25,6 +26,8 @@ public class LoginForm extends JFrame {
     private String _pass = "";
     private int _width = 400;
     private int _height = 550;
+    private JTextField txt_User;
+    private JPasswordField txt_Pass;
 
     public LoginForm() {
         super();
@@ -59,23 +62,25 @@ public class LoginForm extends JFrame {
                 .getScaledInstance(lbl_Logo.getWidth(), lbl_Logo.getHeight(), Image.SCALE_DEFAULT)));
         // TextFiel de Usuario
 
-        JTextField txt_User = new JTextField();
+        txt_User = new JTextField();
         txt_User.setLocation(50, 200);
         txt_User.setFont(fuente);
         txt_User.setSize(300, 25);
         txt_User.setBackground(color);
         txt_User.setBorder(null);
         txt_User.setForeground(Color.WHITE);
+        txt_User.getDocument().addDocumentListener(Validations.DocListener(txt_User));
 
         // TextFiel de Passwors
 
-        JPasswordField txt_Pass = new JPasswordField();
+        txt_Pass = new JPasswordField();
         txt_Pass.setLocation(50, 250);
         txt_Pass.setFont(fuente);
         txt_Pass.setSize(300, 25);
         txt_Pass.setBackground(color);
         txt_Pass.setBorder(null);
         txt_Pass.setForeground(Color.WHITE);
+        txt_Pass.getDocument().addDocumentListener(Validations.DocListener(txt_Pass));
 
         // boton de acceso
 
@@ -104,39 +109,41 @@ public class LoginForm extends JFrame {
     private void AccederEvent(JTextField txt_User, JPasswordField txt_Pass) {
         User = txt_User.getText().trim();
         _pass = new String(txt_Pass.getPassword());
-        if (!LoginFun.Validos(User, _pass)) {
+        if (!CheckForEmpties()) {
             JOptionPane.showMessageDialog(null, "Debes llenar todos los campos");
             return;
         }
-        try {
-            LogArgs args = LoginFun.LogInEvent(User, _pass);
-            if (args == null) {
-                JOptionPane.showMessageDialog(null, "Usuario y/o password Incorrecto/s");
-                txt_User.setText("");
-                txt_Pass.setText("");
-                txt_User.requestFocusInWindow();
-                User = "";
-                _pass = "";
-                return;
-            }
-
-            if (!args.get_estatus().equalsIgnoreCase("Activo"))
-                return;
-            switch (args.get_tipo_nivel()) {
-                case "Administrador":
-                    new AdministradorForm();
-                    break;
-                case "Capturista":
-                    new CapturistaForm();
-                    break;
-                case "Tecnico":
-                    new TecnicoForm();
-                    break;
-            }
-            dispose();
-        } catch (SQLException e1) {
-            e1.printStackTrace();
+        LogArgs args = LoginFun.LogInEvent(User, _pass);
+        if (args == null) {
+            JOptionPane.showMessageDialog(null, "Usuario y/o password Incorrecto/s");
+            txt_User.setText("");
+            txt_Pass.setText("");
+            txt_User.requestFocusInWindow();
+            User = "";
+            _pass = "";
+            return;
         }
+
+        if (!args.get_estatus().equalsIgnoreCase("Activo"))
+            return;
+        switch (args.get_tipo_nivel()) {
+            case "Administrador":
+                new AdministradorForm();
+                break;
+            case "Capturista":
+                new CapturistaForm();
+                break;
+            case "Tecnico":
+                new TecnicoForm();
+                break;
+        }
+        dispose();
+    }
+
+    private boolean CheckForEmpties() {
+        boolean pa = Validations.CheckForEmpty(txt_Pass);
+        boolean us = Validations.CheckForEmpty(txt_User);
+        return us && pa;
     }
 
 }

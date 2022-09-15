@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Component;
 import java.awt.event.WindowEvent;
 
 import javax.imageio.ImageIO;
@@ -15,10 +17,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import Clases.MyOwnFocusTraversalPolicy;
+import Clases.RegistroFun;
 import Clases.Validations;
 
 public class RegistroUsuarioForm extends JFrame {
@@ -41,6 +46,7 @@ public class RegistroUsuarioForm extends JFrame {
     private JPasswordField txt_Password;
     private JComboBox<String> cb_Selector;
     private JButton btn_Agregar;
+    private MyOwnFocusTraversalPolicy myPolicity;
 
     public RegistroUsuarioForm(JFrame main) {
         super();
@@ -230,13 +236,16 @@ public class RegistroUsuarioForm extends JFrame {
 
         // Tab Control
 
-        txt_FullName.setNextFocusableComponent(txt_E_Mail);
-        txt_E_Mail.setNextFocusableComponent(txt_Telefono);
-        txt_Telefono.setNextFocusableComponent(cb_Selector);
-        txt_Usuario.setNextFocusableComponent(txt_Password);
-        txt_Password.setNextFocusableComponent(btn_Agregar);
-        cb_Selector.setNextFocusableComponent(txt_Usuario);
-        btn_Agregar.setNextFocusableComponent(txt_FullName);
+        Vector<Component> order = new Vector<Component>(7);
+        order.add(txt_FullName);
+        order.add(txt_E_Mail);
+        order.add(txt_Telefono);
+        order.add(cb_Selector);
+        order.add(txt_Usuario);
+        order.add(txt_Password);
+        order.add(btn_Agregar);
+        myPolicity = new MyOwnFocusTraversalPolicy(order);
+        setFocusTraversalPolicy(myPolicity);
 
         // Agregar al contenedor
 
@@ -271,9 +280,19 @@ public class RegistroUsuarioForm extends JFrame {
 
     private void OnRegister() {
         if (!CheckForEmpties()) {
-
             return;
         }
+        if (RegistroFun.UserExist(txt_Usuario.getText().trim())) {
+            JOptionPane.showMessageDialog(null, "Este Usuario ya existe.Por favor escoja otro");
+            txt_Usuario.setBorder(BorderFactory.createLineBorder(Color.red));
+            txt_Usuario.selectAll();
+            txt_Usuario.requestFocusInWindow();
+            return;
+        }
+        boolean res = RegistroFun.UserRegiter(txt_FullName.getText().trim(), txt_E_Mail.getText().trim(),
+                txt_Telefono.getText().trim(), cb_Selector.getSelectedItem().toString(), txt_Usuario.getText().trim(),
+                new String(txt_Password.getPassword()), _user);
+        JOptionPane.showMessageDialog(null, res ? "Registro exitoso." : "hubo un error en l registo");
         _main.setVisible(true);
         dispose();
     }
