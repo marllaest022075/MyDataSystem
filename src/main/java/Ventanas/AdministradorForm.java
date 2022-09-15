@@ -120,10 +120,18 @@ public class AdministradorForm extends JFrame {
             }
         });
 
-        // Boton para ingresar Usuarios
+        // Boton para Manejar Usuarios
         JButton btn_ManageUser = new JButton("", new ImageIcon("src/main/java/Images/informationuser.png"));
         btn_ManageUser.setLocation(180, 50);
         btn_ManageUser.setSize(140, 120);
+        btn_ManageUser.setToolTipText("Gestion de usuarios");
+        btn_ManageUser.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                OpenGestionUsusarios();
+            }
+
+        });
 
         // Boton para ingresar Usuarios
         JButton btn_Creativity = new JButton("", new ImageIcon("src/main/java/Images/creatividad.png"));
@@ -165,5 +173,10 @@ public class AdministradorForm extends JFrame {
     private void OpenRegister() {
         setVisible(false);
         new RegistroUsuarioForm(this);
+    }
+
+    private void OpenGestionUsusarios() {
+        setVisible(false);
+        new GestionarUsuariosForm(this);
     }
 }
